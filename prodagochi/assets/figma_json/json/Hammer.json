@@ -1,0 +1,58 @@
+{
+"name":"Hammer",
+"type":"VECTOR",
+"visible":true,
+"x":302,
+"y":64,
+"width":40,
+"height":40,
+"rotation":0,
+"opacity":1,
+"cornerRadius":0,
+"cornerSmoothing":0,
+"constraints":
+{
+	"horizontal": "MIN",
+	"vertical": "MIN"
+},
+"fills":
+[
+	{
+		"type": "IMAGE",
+		"src":"images/cb9937c19b567625cd614be75a3bd6f3fd5a8813.png",
+		"visible": true,
+		"opacity": 1,
+		"blendMode": "NORMAL",
+		"scaleMode": "FILL",
+		"imageTransform": [
+			[
+				1,
+				0,
+				-8.881784197001252e-16
+			],
+			[
+				0,
+				1,
+				0
+			]
+		],
+		"scalingFactor": 0.5,
+		"rotation": 0,
+		"filters": {
+			"exposure": 0,
+			"contrast": 0,
+			"saturation": 0,
+			"temperature": 0,
+			"tint": 0,
+			"highlights": 0,
+			"shadows": 0
+		},
+		"imageHash": "cb9937c19b567625cd614be75a3bd6f3fd5a8813"
+	}
+],
+"strokeCap":"NONE",
+"strokeJoin":"MITER",
+"strokeMiterLimit":4,
+"strokeStyleId":"",
+"strokeWeight":1
+}

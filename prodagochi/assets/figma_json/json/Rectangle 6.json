@@ -1,0 +1,53 @@
+{
+"name":"Rectangle 6",
+"type":"RECTANGLE",
+"visible":true,
+"x":82,
+"y":311,
+"width":569,
+"height":106,
+"rotation":0,
+"opacity":0.10000000149011612,
+"cornerRadius":15,
+"cornerSmoothing":0,
+"constraints":
+{
+	"horizontal": "MIN",
+	"vertical": "MIN"
+},
+"fills":
+[
+	{
+		"type": "SOLID",
+		"visible": true,
+		"opacity": 1,
+		"blendMode": "NORMAL",
+		"color": {
+			"r": 0.4555501341819763,
+			"g": 0.40714791417121887,
+			"b": 0.40714791417121887
+		},
+		"boundVariables": {}
+	}
+],
+"strokeCap":"NONE",
+"strokeJoin":"MITER",
+"strokeMiterLimit":4,
+"strokeStyleId":"",
+"strokeWeight":1,
+"strokes":
+[
+	{
+		"type": "SOLID",
+		"visible": true,
+		"opacity": 1,
+		"blendMode": "NORMAL",
+		"color": {
+			"r": 0,
+			"g": 0,
+			"b": 0
+		},
+		"boundVariables": {}
+	}
+]
+}

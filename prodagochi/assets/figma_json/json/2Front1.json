@@ -1,0 +1,38 @@
+{
+"name":"1Front1",
+"type":"RECTANGLE",
+"visible":true,
+"x":381,
+"y":64,
+"width":202,
+"height":40,
+"rotation":0,
+"opacity":1,
+"cornerRadius":15,
+"cornerSmoothing":0,
+"constraints":
+{
+	"horizontal": "MIN",
+	"vertical": "MIN"
+},
+"fills":
+[
+	{
+		"type": "SOLID",
+		"visible": true,
+		"opacity": 1,
+		"blendMode": "NORMAL",
+		"color": {
+			"r": 0.198252871632576,
+			"g": 0.459716796875,
+			"b": 0.459716796875
+		},
+		"boundVariables": {}
+	}
+],
+"strokeCap":"NONE",
+"strokeJoin":"MITER",
+"strokeMiterLimit":4,
+"strokeStyleId":"",
+"strokeWeight":1
+}

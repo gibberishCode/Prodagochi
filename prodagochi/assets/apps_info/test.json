@@ -1,0 +1,12 @@
+{
+  "apps": [
+    {
+      "name": "Brave",
+      "productive": 0
+    },
+    {
+      "name": "Clion",
+      "productive": 2
+    }
+  ]
+}

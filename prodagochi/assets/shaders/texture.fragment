@@ -1,0 +1,17 @@
+#version 330 core
+out vec4 FragColor;
+  
+in vec2 ioTexCoord;
+
+uniform sampler2D ourTexture;
+uniform float uUvScale = 1;
+uniform float uOpacity = 1;
+uniform vec2 uUvOffset = vec2(0, 0);
+uniform vec3 uColor = vec3(1, 1, 1);
+
+void main()
+{
+    vec2 texCoord = ioTexCoord * uUvScale + uUvOffset;
+    vec4 sampled = texture(ourTexture, texCoord);
+    FragColor = vec4(sampled.rgba);// * uColor, min(sampled.a, 1));
+}
