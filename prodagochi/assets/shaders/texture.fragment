@@ -1,6 +1,6 @@
 #version 330 core
 out vec4 FragColor;
-  
+
 in vec2 ioTexCoord;
 
 uniform sampler2D ourTexture;
@@ -13,5 +13,5 @@ void main()
 {
     vec2 texCoord = ioTexCoord * uUvScale + uUvOffset;
     vec4 sampled = texture(ourTexture, texCoord);
-    FragColor = vec4(sampled.rgba);// * uColor, min(sampled.a, 1));
+    FragColor = vec4(sampled.rgb * uColor, sampled.a);
 }
