@@ -19,8 +19,10 @@ public:
   explicit Texture(std::string_view path);
   explicit Texture(GLuint id);
 
-  void use() const {
-    glBindTexture(GL_TEXTURE_2D, _textureId);
+  void use() const;
+
+  GLuint getId() {
+    return _textureId;
   }
 
 private:

@@ -6,6 +6,7 @@
 #include <memory>
 
 #include "engine/asset_manager.h"
+#include "engine/model.h"
 #include "engine/renderer.h"
 #include "engine/text_renderer.h"
 #include "engine/ui_renderer.h"
@@ -39,14 +40,13 @@ Prodgagochi::Prodgagochi(int width, int height) {
   _window = std::make_unique<Window>(width, height, "Prodagochi");
   glfw::makeContextCurrent(*(_window.get()));
   glfw::swapInterval(0);
-  _renderer = std::make_unique<Renderer>(_window.get());
   _native = std::make_unique<Native>(*_window);
-  //  createUI();
 }
 
 Prodgagochi::~Prodgagochi() = default;
 
 void Prodgagochi::init() {
+  _renderer = std::make_unique<Renderer>(_window.get());
   _window->sizeEvent.setCallback([this](auto &window, float w, float h) {
     glViewport(0, 0, w, h);
     this->_renderer->getUIRenderer()->setProjection(
@@ -58,10 +58,14 @@ void Prodgagochi::init() {
         _renderer->getUIRenderer()->onClick(glm::vec2(x, y));
       });
   _avatarShader = Shader("assets/shaders/texture");
-  //  _avatarTexture = Texture("assets/textures/texture.png");
+  _avatarShader3D = Shader("assets/shaders/model");
   _avatarTexture =
       AssetManager::getAsset<Texture>("assets/textures/texture.png");
+  _model = new Model("assets/models/monkey.fbx");
   createUI();
+  //    auto l = new Model("assets/models/monkey.fbx");
+  auto [w, h] = _window->getSize();
+  _frameBuffer = new FrameBuffer(w, h);
   //  _window->focusEvent.setCallback([this](glfw::Window &, bool state) {
   //    if (!state) {
   //      this->setState(std::make_unique<ClosedState>());
@@ -90,7 +94,7 @@ void Prodgagochi::init() {
 }
 
 void Prodgagochi::update() {
-  std::string name = _native->getCurrentWindowName();
+  //  std::string name = _native->getCurrentWindowName();
   //  std::cout << name << std::endl;
   //  auto [w, h] = _window->getSize();
   //  auto center = glm::vec2(w, h) / 2.0f;
@@ -102,7 +106,24 @@ void Prodgagochi::update() {
 }
 
 void Prodgagochi::render() {
-  _renderer->getUIRenderer()->render();
+  _frameBuffer->bind();
+  //  _avatarShader->
+  auto projection =
+      glm::perspective(glm::radians(65.0f), 800.0f / 600.0f, 0.1f, 100.0f);
+  auto view = glm::translate(glm::mat4(1), glm::vec3(0, 1, -3));
+  auto pos = glm::vec3{0, 0, 3};
+  auto target = glm::vec3{0, 0, 0};
+  glm::mat4 viewMatrix = glm::lookAt(pos, target, glm::vec3(0.0f, 1.0f, 0.0f));
+  auto model = glm::mat4(1);
+  glm::mat4 rotationMatrix = glm::rotate(glm::mat4(1.0f), glm::radians(-90.0f),
+                                         glm::vec3(1.0f, 0.0f, 0.0f));
+  model *= rotationMatrix;
+  auto mvp = projection * viewMatrix * model;
+  _avatarShader3D.use();
+  _avatarShader3D.set("uMvp", mvp);
+  _model->Draw(_avatarShader3D);
+  _frameBuffer->unBind();
+  //    _renderer->getUIRenderer()->render();
   renderAvatar();
 }
 
@@ -144,7 +165,8 @@ void Prodgagochi::renderAvatar() {
   auto mp = p * m;
   _avatarShader.use();
   _avatarShader.set("uUvScale", 0.25f);
-  _renderer->renderQuad(_avatarTexture, _avatarShader, mp);
+  std::cout << _frameBuffer->getTexture()->getId() << std::endl;
+  _renderer->renderQuad(*(_frameBuffer->getTexture()), _avatarShader, mp);
 }
 
 void Prodgagochi::createUI() {

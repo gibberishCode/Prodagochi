@@ -1,0 +1,12 @@
+Language:        Cpp
+SortIncludes: 'true'
+Standard: Cpp11
+UseTab: Never
+
+
+AlignOperands: Align
+PenaltyBreakAssignment: 6
+AllowShortFunctionsOnASingleLine: Empty
+AlwaysBreakTemplateDeclarations: true
+SeparateDefinitionBlocks: Always
+# AlwaysBreakAfterReturnType: None

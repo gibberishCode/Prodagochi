@@ -45,4 +45,9 @@ Texture::Texture(std::string_view path) {
 }
 
 Texture::Texture(GLuint id) : _textureId(id) {}
+
+void Texture::use() const {
+  glActiveTexture(GL_TEXTURE0);
+  glBindTexture(GL_TEXTURE_2D, _textureId);
+}
 } // namespace engine

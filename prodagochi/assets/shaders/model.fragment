@@ -1,0 +1,14 @@
+#version 330 core
+out vec4 FragColor;
+  
+in vec2 ioTexCoord;
+
+uniform sampler2D uDiffuse0;
+uniform sampler2D uDiffuse1;
+
+void main()
+{
+    vec2 texCoord = ioTexCoord;
+    vec4 sampled = texture(uDiffuse0, texCoord);
+    FragColor = sampled;
+}

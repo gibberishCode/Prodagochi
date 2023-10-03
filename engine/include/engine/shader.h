@@ -19,6 +19,7 @@ public:
          std::string_view fragnmentShaderPath);
   void set(std::string_view name, const glm::mat4 &data);
   void set(std::string_view name, float data);
+  void set(std::string_view name, int data);
   void set(std::string_view name, const glm::vec2 &data);
   void set(std::string_view name, const glm::vec3 &data);
   void set(std::string_view name, const glm::vec4 &data);

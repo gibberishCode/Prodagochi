@@ -40,6 +40,11 @@ void Shader::set(std::string_view name, float data) {
   glUniform1f(location, data);
 }
 
+void Shader::set(std::string_view name, int data) {
+  GLint location = getUniformLocation(name);
+  glUniform1i(location, data);
+}
+
 GLint Shader::getUniformLocation(std::string_view name) const {
   assert(_currentProgram == _program);
   // TODO check dict performance

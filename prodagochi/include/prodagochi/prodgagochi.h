@@ -1,11 +1,8 @@
-//
-// Created by lol on 9/2/23.
-//
-
 #pragma once
 
 #include <memory>
 
+#include "engine/frame_buffer.h"
 #include "engine/renderer.h"
 #include "engine/shader.h"
 #include "engine/texture.h"
@@ -37,8 +34,11 @@ private:
   std::unique_ptr<engine::Renderer> _renderer;
   std::unique_ptr<Native> _native;
   engine::Shader _avatarShader;
+  engine::Shader _avatarShader3D;
   engine::Texture _avatarTexture;
+  engine::FrameBuffer *_frameBuffer;
   std::shared_ptr<engine::ProgressBar> _spriteTest;
+  class Model *_model;
   class UIRenderer *_uiRenderer;
 };
 

@@ -53,7 +53,8 @@ private:
 
 private:
   const int DATA_PER_VERTEX{5}; // For simplicity x,y,z,u,v
-  GLuint _quadVao{};
+  GLuint _quadVAO{};
+  GLuint _quadVBO{};
   std::unique_ptr<TextRenderer> _textRenderer;
   std::unique_ptr<UIRenderer> _uiRenderer;
 };

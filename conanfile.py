@@ -6,7 +6,8 @@ from conan import ConanFile
 
 class GladGlfwConan(ConanFile):
     settings = "os", "arch", "compiler", "build_type"
-    requires = ["glad/0.1.36", "glfw/3.3.2", "freetype/2.13.0", "glm/cci.20230113", "nlohmann_json/3.11.2"]
+    requires = ["glad/0.1.36", "glfw/3.3.2", "freetype/2.13.0", "glm/cci.20230113", "nlohmann_json/3.11.2",
+                "assimp/5.0.1"]
     generators = "CMakeDeps", "CMakeToolchain"
 
     def package(self):
