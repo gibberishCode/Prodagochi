@@ -33,11 +33,24 @@ Renderer::Renderer(Window *window) {
   _textRenderer = std::make_unique<TextRenderer>(this);
   _uiRenderer = std::make_unique<UIRenderer>(this, window);
 }
-
 Renderer::~Renderer() = default;
 
 void Renderer::createQuad() {
-  //  test();
+  
+  // std::cout << "quad" << std::endl;
+  glGenVertexArrays(1, &_quadVAO);
+  glBindVertexArray(_quadVAO);
+  glGenBuffers(1, &_quadVBO);
+  glBindBuffer(GL_ARRAY_BUFFER, _quadVBO);
+  glBufferData(GL_ARRAY_BUFFER, DATA_PER_VERTEX * 6 * sizeof(float), nullptr,
+               GL_DYNAMIC_DRAW);
+  glEnableVertexAttribArray(0);
+  glEnableVertexAttribArray(1);
+  int stride = DATA_PER_VERTEX * sizeof(GLfloat);
+  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, stride, 0);
+  glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, stride,
+                        (void *)(3 * sizeof(GLfloat)));
+  glBindVertexArray(0);
 }
 
 void Renderer::renderQuad(Texture texture, Shader shader,
@@ -53,30 +66,17 @@ void Renderer::renderQuad(Shader shader, const glm::mat4 &transform) {
 void Renderer::renderQuad(Shader shader, const glm::mat4 &transform,
                           std::span<float, 6 * 5> vertices) {
 
-  std::cout << "quad" << std::endl;
-  glGenVertexArrays(1, &_quadVAO);
-  glBindVertexArray(_quadVAO);
-  glGenBuffers(1, &_quadVBO);
-  glBindBuffer(GL_ARRAY_BUFFER, _quadVBO);
-  glBufferData(GL_ARRAY_BUFFER, DATA_PER_VERTEX * 6 * sizeof(float), nullptr,
-               GL_DYNAMIC_DRAW);
-  glEnableVertexAttribArray(0);
-  glEnableVertexAttribArray(1);
-  int stride = DATA_PER_VERTEX * sizeof(GLfloat);
-  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, stride, 0);
-  glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, stride,
-                        (void *)(3 * sizeof(GLfloat)));
-  //  glBindVertexArray(0);
 
   shader.use();
   shader.set("uMvp", transform);
-  ////    glBindVertexArray(_quadVAO);
-  //    glBindVertexArray(_quadVBO);
+  glBindVertexArray(_quadVAO);
+  glBindBuffer(GL_ARRAY_BUFFER, _quadVBO);
   glBufferSubData(GL_ARRAY_BUFFER, 0, vertices.size_bytes(), vertices.data());
 
   glDrawArrays(GL_TRIANGLES, 0, 6);
 
   glBindVertexArray(0);
+  glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
 TextRenderer *Renderer::getTextRenderer() const {
@@ -88,7 +88,7 @@ UIRenderer *Renderer::getUIRenderer() const {
 }
 
 void Renderer::clear() {
-  glClear(GL_COLOR_BUFFER_BIT);
+  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
 void Renderer::render(Texture teture, Shader shader, const glm::mat4 &transform,

@@ -4,6 +4,7 @@
 #include "engine/text_renderer.h"
 #include "engine/renderer.h"
 #include <algorithm>
+#include <string.h>
 
 namespace engine {
 
@@ -70,50 +71,55 @@ void TextRenderer::initLetters() {
 
 void TextRenderer::renderText(const glm::mat4 &mvp, const char *text,
                               float textAreaWidth) {
-  struct point {
-    GLfloat x;
-    GLfloat y;
-    GLfloat z = 0;
-    GLfloat u;
-    GLfloat v;
-  } coords[6 * strlen(text)];
+  // struct point {
+  //   GLfloat x;
+  //   GLfloat y;
+  //   GLfloat z = 0;
+  //   GLfloat u;
+  //   GLfloat v;
+  // };
+  // std::vector<point> coords(6 * strlen(text));
 
-  float x{};
-  float y{};
-  int n{};
-  float scale = 1;
-  for (const char *p = text; *p; p++) {
-    Character ch = Characters[*p];
-    if (x > textAreaWidth) {
-      x = 0;
-      y -= _atlas.Height;
-    }
-    float x2 = x + ch.Bearing.x * scale;
-    float y2 = y - (-ch.Size.y / _atlas.Height - ch.Bearing.y) * scale;
+  // float x{};
+  // float y{};
+  // int n{};
+  // float scale = 1;
+  // for (const char *p = text; *p; p++) {
+  //   Character ch = Characters[*p];
+  //   if (x > textAreaWidth) {
+  //     x = 0;
+  //     y -= _atlas.Height;
+  //   }
+  //   float x2 = x + ch.Bearing.x * scale;
+  //   float y2 = y - (-ch.Size.y / _atlas.Height - ch.Bearing.y) * scale;
 
-    float left = ch.U;    //  c[*p].left;
-    float bw = ch.Size.x; // c[*p].bw;
-    float bh = ch.Size.y; // c[*p].bh;
-    float w = ch.Size.x;  // c[*p].bw * sx;
-    float h = ch.Size.y;  // c[*p].bh * sy;
-    x += (ch.Advance >> 6);
-    float right = left + bw / _atlas.Width;
-    float bottom = bh / _atlas.Height;
+  //   float left = ch.U;    //  c[*p].left;
+  //   float bw = ch.Size.x; // c[*p].bw;
+  //   float bh = ch.Size.y; // c[*p].bh;
+  //   float w = ch.Size.x;  // c[*p].bw * sx;
+  //   float h = ch.Size.y;  // c[*p].bh * sy;
+  //   x += (ch.Advance >> 6);
+  //   float right = left + bw / _atlas.Width;
+  //   float bottom = bh / _atlas.Height;
 
-    coords[n++] = {x2, y2, 0, left, 0};
-    coords[n++] = {x2 + w, y2, 0, right, 0};
-    coords[n++] = {x2, y2 - h, 0, left, bottom};
-    coords[n++] = {x2 + w, y2, 0, right, 0};
-    coords[n++] = {x2, y2 - h, 0, left, bottom};
-    coords[n++] = {x2 + w, y2 - h, 0, right, bottom};
-  }
-  auto offset = glm::vec3{y <= -_atlas.Height ? textAreaWidth : x, y, 0};
-  auto mOffset = glm::translate(glm::mat4(1), -offset / 2.0f);
-  _textShader.use();
-  glBindTexture(GL_TEXTURE_2D, _atlas.Texture);
-  _textShader.set("uMvp", mvp * mOffset);
-  glBufferData(GL_ARRAY_BUFFER, sizeof coords, coords, GL_DYNAMIC_DRAW);
-  glDrawArrays(GL_TRIANGLES, 0, n);
+  //   coords[n++] = {x2, y2, 0, left, 0};
+  //   coords[n++] = {x2 + w, y2, 0, right, 0};
+  //   coords[n++] = {x2, y2 - h, 0, left, bottom};
+  //   coords[n++] = {x2 + w, y2, 0, right, 0};
+  //   coords[n++] = {x2, y2 - h, 0, left, bottom};
+  //   coords[n++] = {x2 + w, y2 - h, 0, right, bottom};
+  // }
+  // auto offset = glm::vec3{y <= -_atlas.Height ? textAreaWidth : x, y, 0};
+  // auto mOffset = glm::translate(glm::mat4(1), -offset / 2.0f);
+  // _textShader.use();
+  // unsigned int vbo;
+  // glGenBuffers(1, &vbo);
+  // glBindBuffer(GL_ARRAY_BUFFER, vbo);
+  // glBindTexture(GL_TEXTURE_2D, _atlas.Texture);
+  // _textShader.set("uMvp", mvp * mOffset);
+  // glBufferData(GL_ARRAY_BUFFER, coords.size() * sizeof(point), coords.data(), GL_DYNAMIC_DRAW);
+  // glDrawArrays(GL_TRIANGLES, 0, 3);
+  // glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
 glm::vec2 TextRenderer::getTextSize(std::string_view text, float textArea) {

@@ -1,4 +1,5 @@
 from conan import ConanFile
+import os
 
 
 # from conan.tools.files import clear_folder
@@ -22,3 +23,11 @@ class GladGlfwConan(ConanFile):
         self.options['glad'].spec = 'gl'
         self.options['glad'].gl_profile = 'core'
         self.options['glad'].gl_version = '4.3'
+    # def layout(self):
+    #     # We make the assumption that if the compiler is msvc the
+    #     # CMake generator is multi-config
+    #     multi = True if self.settings.get_safe("compiler") == "msvc" else False
+    #     if multi:
+    #         self.folders.generators = os.path.join("build", "generators")
+    #     else:
+    #         self.folders.generators = os.path.join("build", str(self.settings.build_type), "generators")

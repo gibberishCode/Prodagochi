@@ -2,7 +2,8 @@ cmake_minimum_required(VERSION 3.27)
 project(prodgochi)
 
 set(CMAKE_CXX_STANDARD 23)
-
+list(APPEND CMAKE_PREFIX_PATH "/build")
+list(APPEND CMAKE_MODULE_PATH "/build")
 set(GLFWPP_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE) # disable building GLFWPP examples
 add_definitions(-DGLFW_INCLUDE_NONE)
 add_subdirectory(glfwpp)

@@ -17,7 +17,9 @@ UIRenderer::UIRenderer(Renderer *renderer, glfw::Window *window)
 }
 
 void UIRenderer::render() {
+  glDisable(GL_DEPTH_TEST);  
   _root->render(_renederer);
+  glEnable(GL_DEPTH_TEST);
 }
 
 Shader UIRenderer::getShader() {

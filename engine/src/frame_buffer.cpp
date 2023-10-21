@@ -23,8 +23,8 @@ FrameBuffer::FrameBuffer(int width, int heigh) {
   glFramebufferTexture(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, _textureId, 0);
 
   // Set the list of draw buffers.
-  //  GLenum DrawBuffers[1] = {GL_COLOR_ATTACHMENT0};
-  //  glDrawBuffers(1, DrawBuffers); // "1" is the size of DrawBuffers
+  GLenum DrawBuffers[1] = {GL_COLOR_ATTACHMENT0};
+  glDrawBuffers(1, DrawBuffers); // "1" is the size of DrawBuffers
   unBind();
 }
 

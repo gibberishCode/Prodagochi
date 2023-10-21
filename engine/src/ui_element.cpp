@@ -121,7 +121,7 @@ void Sprite::render(Renderer *renderer) {
   //  std::cout << glm::to_string(_localTransform) << std::endl << std::endl;
   auto mp = p * m;
   shader.use();
-  shader.set("uOpacity", _opacity);
+  // shader.set("uOpacity", _opacity);
   shader.set("uColor", _color);
   renderer->renderQuad(_texture, shader, mp);
   UIElement::render(renderer);

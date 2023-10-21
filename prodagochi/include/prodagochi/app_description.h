@@ -1,7 +1,9 @@
 
 #pragma once
+
 #include <stdexcept>
 #include <string>
+#include <vector>
 
 namespace prodagochi {
 
@@ -25,14 +27,21 @@ constexpr const char *appTypeTostring(AppType e) throw() {
     return "Distractive";
   case AppType::VeryDistractive:
     return "VeryDistractive";
-  default:
-    throw std::invalid_argument("Unimplemented item");
+  // default:
+
+    // throw std::invalid_argument("Unimplemented item");
   }
 }
 
 struct AppInfo {
   std::string Title;
   AppType Type;
+};
+
+
+
+struct AppSettings { 
+  std::vector<AppInfo> _apps;
 };
 
 } // namespace prodagochi

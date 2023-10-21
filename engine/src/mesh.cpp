@@ -31,6 +31,7 @@ void Mesh::Draw(engine::Shader &shader) {
 
   // draw mesh
   glBindVertexArray(VAO);
+  glBindBuffer(GL_ARRAY_BUFFER, VBO);
   glDrawElements(GL_TRIANGLES, _indices.size(), GL_UNSIGNED_INT, 0);
   glBindVertexArray(0);
 }
