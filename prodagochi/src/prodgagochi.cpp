@@ -37,13 +37,13 @@ using json = nlohmann::json;
 
 namespace prodagochi {
 
-void to_json(json& j, const AppInfo& p) {
-        j = json{{"title", p.Title}, {"type", p.Type}};
-  }
+void to_json(json &j, const AppInfo &p) {
+  j = json{{"title", p.Title}, {"type", p.Type}};
+}
 
-void from_json(const json& j, AppInfo& p) {
-    j.at("title").get_to(p.Title);
-    j.at("type").get_to(p.Type);
+void from_json(const json &j, AppInfo &p) {
+  j.at("title").get_to(p.Title);
+  j.at("type").get_to(p.Type);
 }
 
 Prodgagochi::Prodgagochi(int width, int height) {
@@ -67,7 +67,6 @@ void Prodgagochi::onTabChanged(std::string tabUrl) {
   std::cout << tabUrl << std::endl;
 }
 
-
 void Prodgagochi::init() {
   _renderer = std::make_unique<Renderer>(_window.get());
   _window->sizeEvent.setCallback([this](auto &window, float w, float h) {
@@ -84,16 +83,15 @@ void Prodgagochi::init() {
   _avatarShader3D = Shader("assets/shaders/model");
   _avatarTexture =
       AssetManager::getAsset<Texture>("assets/textures/texture.png");
-   _model = new Model("assets/models/monkey.fbx");
+  _model = new Model("assets/models/MushroomMeshPA.fbx");
   createUI();
-      //auto l = new Model("assets/models//*monkey.*/fbx");
+  // auto l = new Model("assets/models//*monkey.*/fbx");
   auto [w, h] = _window->getSize();
-   _frameBuffer = new FrameBuffer(w, h);
+  _frameBuffer = new FrameBuffer(w, h);
   //  _serverThread = {serv, "Server"};
-  _serverThread= std::thread{&Prodgagochi::listenForTabSwitch, this};
-  loadSettings();
+  _serverThread = std::thread{&Prodgagochi::listenForTabSwitch, this};
+  // loadSettings();
 
- 
   //  _window->focusEvent.setCallback([this](glfw::Window &, bool state) {
   //    if (!state) {
   //      this->setState(std::make_unique<ClosedState>());
@@ -125,44 +123,34 @@ glm::mat4 _mvp;
 float dt = 0;
 
 void Prodgagochi::update() {
-   std::string name = _native->getCurrentWindowName();
-  //  std::cout << name << std::endl;
-  //  auto [w, h] = _window->getSize();
-  //  auto center = glm::vec2(w, h) / 2.0f;
-  //  static float size = 0;
-  //  size += 0.000005f;
-  //  _spriteTest->setValue(size);
-  //  _spriteTest->setSize(glm::vec2(size, 30));
-  //  _spriteTest->setPosition(center);
+  std::string name = _native->getCurrentWindowName();
 
 
-    auto projection = glm::perspective(glm::radians(65.0f), 1.0f, 0.1f, 100.0f);
-   auto view = glm::translate(glm::mat4(1), glm::vec3(0, 1, -3));
-   auto pos = glm::vec3{0, 0, 2};
-   auto target = glm::vec3{0, 0, 0};
-   glm::mat4 viewMatrix = glm::lookAt(pos, target, glm::vec3(0.0f, 1.0f, 0.0f));
-   auto model = glm::scale(glm::mat4(1), glm::vec3(1, -1, 1));
-   glm::mat4 rotationMatrix = glm::rotate(glm::mat4(1.0f), glm::radians(-90.0f),
-                                          glm::vec3(1.0f, 0.0f, 0.0f));
-   dt += 0.001f;
-   glm::mat4 rotationMatrix1 = glm::rotate(glm::mat4(1.0f), glm::radians(dt),
+  auto projection = glm::perspective(glm::radians(65.0f), 1.0f, 0.1f, 100.0f);
+  auto pos = glm::vec3{0, 20, 60};
+  auto target = glm::vec3{0, 15, 0};
+  glm::mat4 viewMatrix = glm::lookAt(pos, target, glm::vec3(0.0f, 1.0f, 0.0f));
+  auto model = glm::scale(glm::mat4(1), glm::vec3(1, -1, 1) * 0.5f);
+  glm::mat4 rotationMatrix = glm::rotate(glm::mat4(1.0f), glm::radians(90.0f),
+                                         glm::vec3(1.0f, 0.0f, 0.0f));
+  dt += 0.001f;
+  glm::mat4 rotationMatrix1 = glm::rotate(glm::mat4(1.0f), glm::radians(dt),
                                           glm::vec3(0.0f, 0.0f, 1.0f));
-   model *= rotationMatrix * rotationMatrix1;
-   _mvp = projection * viewMatrix * model;
-
+  model *= rotationMatrix * rotationMatrix1;
+  _mvp = projection * viewMatrix * model;
 }
 
 void Prodgagochi::render() {
-  //   _frameBuffer->bind();
-  //  glClear(GL_COLOR_BUFFER_BIT |
-  //          GL_DEPTH_BUFFER_BIT); // we're not using the stencil buffer now
-  //  glEnable(GL_DEPTH_TEST);
+  _frameBuffer->bind();
+  glClear(GL_COLOR_BUFFER_BIT |
+          GL_DEPTH_BUFFER_BIT); // we're not using the stencil buffer now
+  glEnable(GL_DEPTH_TEST);
   _avatarShader3D.use();
-   _avatarShader3D.set("uMvp", _mvp);
-   _model->Draw(_avatarShader3D);
-  //  _frameBuffer->unBind();
-  // _renderer->getUIRenderer()->render();
-  // renderAvatar();
+  _avatarShader3D.set("uMvp", _mvp);
+  _model->Draw(_avatarShader3D);
+  _frameBuffer->unBind();
+  _renderer->getUIRenderer()->render();
+  renderAvatar();
 }
 
 void Prodgagochi::run() {
@@ -197,8 +185,10 @@ void Prodgagochi::renderAvatar() {
   glm::mat4 p = glm::ortho<float>(0.0f, x, 0.0f, y);
   auto translate =
       glm::translate(glm::mat4(1), glm::vec3(82 + 90, y - 64 - 90, 0));
+  glm::mat4 rotation = glm::rotate(glm::mat4(1.0f), glm::radians(180.0f),
+                                         glm::vec3(0.0f, 0.0f, 1.0f));
   auto scale = glm::scale(glm::mat4(1), glm::vec3(90, 90, 1));
-  auto m = translate * scale;
+  auto m = translate * rotation * scale;
   auto mp = p * m;
   _avatarShader.use();
   //_avatarShader.set("uUvScale", 1);
@@ -206,9 +196,9 @@ void Prodgagochi::renderAvatar() {
   _renderer->renderQuad(*(_frameBuffer->getTexture()), _avatarShader, mp);
 }
 
-void Prodgagochi::renderAvatarState() {
+// void Prodgagochi::renderAvatarState() {
 
-}
+// }
 
 void Prodgagochi::createUI() {
   auto uiRenderer = _renderer->getUIRenderer();
@@ -217,8 +207,8 @@ void Prodgagochi::createUI() {
   auto center = glm::vec2(w, h) / 2.0f;
 
   auto background = std::make_shared<Sprite>(
-  center, glm::vec2(w, h),
-  AssetManager::getAsset<Texture>("assets/textures/rect.png"));
+      center, glm::vec2(w, h),
+      AssetManager::getAsset<Texture>("assets/textures/rect.png"));
   background->setColor(glm::vec3(34, 34, 34));
   root->addChild(background);
 
@@ -228,21 +218,20 @@ void Prodgagochi::createUI() {
   }
 }
 
-
 void Prodgagochi::listenForTabSwitch() {
   Server svr;
 
-  svr.Post("/",
-  [&](const Request &req, Response &res, const ContentReader &content_reader) {
-      std::string body;
-      content_reader([&](const char *data, size_t data_length) {
-        body.append(data, data_length);
-        return true;
-      });
-      json json = json.parse(body); 
-      if (json.contains("url")) {
-        onTabChanged(std::move(json["url"]));
-      }
+  svr.Post("/", [&](const Request &req, Response &res,
+                    const ContentReader &content_reader) {
+    std::string body;
+    content_reader([&](const char *data, size_t data_length) {
+      body.append(data, data_length);
+      return true;
+    });
+    json json = json.parse(body);
+    if (json.contains("url")) {
+      onTabChanged(std::move(json["url"]));
+    }
   });
   svr.listen("127.0.0.1", 3000);
 }
