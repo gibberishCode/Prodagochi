@@ -64,7 +64,7 @@ createUIFromFigmaFiles(const fs::path &path, glm::vec2 windowSize) {
       if (fs::is_regular_file(entry.path())) {
          auto rect = createRect(entry.path(), windowSize);
          
-         ret.insert({entry.path().filename().string(), rect});
+         ret.insert({entry.path().stem().string(), rect});
       }
       //  else {
       //   std::cerr << "The specified path is not a directory." << std::endl;

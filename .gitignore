@@ -1,7 +1,8 @@
 .idea
+.xmake
+.vscode
+.cache
 CMakeUserPresets.json
 cmake-build-debug
 build
-.xmake
-.vscode
 compile_commands.json

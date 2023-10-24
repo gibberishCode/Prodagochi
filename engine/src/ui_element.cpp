@@ -8,11 +8,12 @@
 #include "engine/text_renderer.h"
 #include "engine/ui_element.h"
 #include "engine/ui_renderer.h"
+#include "glm/fwd.hpp"
 
 namespace engine {
 
 UIElement::UIElement(const glm::vec2 &pos, const glm::vec2 &size)
-    : _position(pos, 0), _size(size, 1) {
+    : _position(pos, 0), _size2(size, 1) {
   //  _anchor = glm::vec2(1, 0);
   updateLocalTransform();
 }
@@ -30,8 +31,8 @@ void UIElement::addChild(std::shared_ptr<UIElement> child) {
 }
 
 void UIElement::updateChild(const std::shared_ptr<UIElement> &child) {
-  std::cout << glm::to_string(_localTransform) << std::endl;
-  std::cout << glm::to_string(_transform) << std::endl;
+  // std::cout << glm::to_string(_localTransform) << std::endl;
+  // std::cout << glm::to_string(_transform) << std::endl;
   auto nonScale = _transform;
   auto nonScale2 = _localTransform;
 
@@ -88,21 +89,25 @@ void UIElement::setAnchor(const glm::vec2 &anchor) {
 void UIElement::updateLocalTransform() {
   auto correctedAnchor = _anchor;
   auto localTranslate =
-      glm::translate(glm::mat4(1), glm::vec3(_size.x * correctedAnchor.x,
-                                             _size.y * correctedAnchor.y, 0) *
+      glm::translate(glm::mat4(1), glm::vec3(_size2.x * correctedAnchor.x,
+                                             _size2.y * correctedAnchor.y, 0) *
                                        0.5f);
   auto init = glm::mat4(1);
-  _localTransform = glm::translate(init, _position) * glm::scale(init, _size) *
+  _localTransform = glm::translate(init, _position) * glm::scale(init, _size2) *
                     glm::translate(init, glm::vec3(correctedAnchor, 0));
   std::for_each(_children.begin(), _children.end(),
                 [this](const auto &child) { this->updateChild(child); });
 }
 
 void UIElement::setSize(const glm::vec2 &size) {
-  _size = glm::vec3(size, 1);
+  _size2 = glm::vec3(size, 1);
   updateLocalTransform();
-  std::for_each(_children.begin(), _children.end(),
-                [this](const auto &child) { this->updateChild(child); });
+  // std::for_each(_children.begin(), _children.end(),
+                // [this](const auto &child) { this->updateChild(child); });
+}
+
+const glm::vec2&  UIElement::getSize() const {
+  return _size2;
 }
 
 Sprite::Sprite(Texture texture)
@@ -171,7 +176,7 @@ ProgressBar::ProgressBar(const glm::vec2 &pos, const glm::vec2 &size)
 }
 
 void ProgressBar::setValue(float value) {
-  _bar->setSize(glm::vec2(_maxValue * value, _size.y));
+  _bar->setSize(glm::vec2(_maxValue * value, _size2.y));
   _value = value;
 }
 
@@ -198,7 +203,7 @@ Text::Text(const glm::vec2 &pos, const glm::vec2 &size, std::string text)
 Text::Text(const glm::vec2 &pos, std::string text)
     : UIElement(pos, glm::vec2(1, 1)) {
   auto textSize = TextRenderer::getInstance()->getTextSize(text);
-  _size = glm::vec3(textSize * 0.5f, 1);
+  _size2 = glm::vec3(textSize * 0.5f, 1);
   updateLocalTransform();
   addChild(std::make_shared<InternalText>(glm::vec2(0, 0), std::move(text),
                                           text.size() * 48));

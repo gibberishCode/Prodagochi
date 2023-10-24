@@ -8,6 +8,7 @@
 #include <vector>
 
 #include "common.h"
+#include "glm/fwd.hpp"
 #include "texture.h"
 #include <glm/gtx/matrix_decompose.hpp>
 #include <glm/gtx/string_cast.hpp>
@@ -32,6 +33,7 @@ public:
   void setTranform(const glm::mat4 &transform);
   void setAnchor(const glm::vec2 &anchor);
   void setLocalTransform(const glm::mat4 &transform);
+  const glm::vec2& getSize() const;
 
   const glm::mat4 &getLocalTransform() const {
     return _localTransform;
@@ -49,9 +51,10 @@ private:
 protected:
   glm::vec2 _anchor{0};
   glm::vec3 _position{};
-  glm::vec3 _size{1};
+  glm::vec3 _size2{1};
   glm::mat4 _localTransform{1};
   glm::mat4 _transform{1};
+  glm::vec3 _testing{};
 
 private:
   std::vector<std::shared_ptr<UIElement>> _children;

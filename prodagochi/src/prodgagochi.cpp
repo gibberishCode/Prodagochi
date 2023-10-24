@@ -2,16 +2,20 @@
 // Created by lol on 9/2/23.
 //
 
+#include <algorithm>
 #include <chrono>
 #include <filesystem>
 #include <fstream>
 #include <memory>
+#include <optional>
+#include <string>
 #include <thread>
 
 #include "engine/asset_manager.h"
 #include "engine/model.h"
 #include "engine/renderer.h"
 #include "engine/text_renderer.h"
+#include "engine/timer.h"
 #include "engine/ui_element.h"
 #include "engine/ui_renderer.h"
 #include "glm/fwd.hpp"
@@ -90,7 +94,9 @@ void Prodgagochi::init() {
   _frameBuffer = new FrameBuffer(w, h);
   //  _serverThread = {serv, "Server"};
   _serverThread = std::thread{&Prodgagochi::listenForTabSwitch, this};
-  // loadSettings();
+  loadSettings();
+  _updateStateTimer = Timer(2, true, [this]() { this->updateAvatarState(); });
+  _updateStateTimer.start();
 
   //  _window->focusEvent.setCallback([this](glfw::Window &, bool state) {
   //    if (!state) {
@@ -125,7 +131,6 @@ float dt = 0;
 void Prodgagochi::update() {
   std::string name = _native->getCurrentWindowName();
 
-
   auto projection = glm::perspective(glm::radians(65.0f), 1.0f, 0.1f, 100.0f);
   auto pos = glm::vec3{0, 20, 60};
   auto target = glm::vec3{0, 15, 0};
@@ -151,6 +156,7 @@ void Prodgagochi::render() {
   _frameBuffer->unBind();
   _renderer->getUIRenderer()->render();
   renderAvatar();
+  renderAvatarState();
 }
 
 void Prodgagochi::run() {
@@ -180,13 +186,25 @@ void Prodgagochi::run() {
   }
 }
 
+void Prodgagochi::updateAvatarState() {
+  auto name = _native->getCurrentWindowName();
+  auto appInfo = findAppInfoByName(name);
+  if (appInfo) {
+    std::cout << "app found " << appInfo->Title << std::endl;
+  } else {
+    std::cout << "app not found " << name << std::endl;
+  }
+  auto p = _productivityState.getProductivity();
+  _productivityState.setProductivity(p + 0.001);
+}
+
 void Prodgagochi::renderAvatar() {
   auto [x, y] = _window->getSize();
   glm::mat4 p = glm::ortho<float>(0.0f, x, 0.0f, y);
   auto translate =
       glm::translate(glm::mat4(1), glm::vec3(82 + 90, y - 64 - 90, 0));
   glm::mat4 rotation = glm::rotate(glm::mat4(1.0f), glm::radians(180.0f),
-                                         glm::vec3(0.0f, 0.0f, 1.0f));
+                                   glm::vec3(0.0f, 0.0f, 1.0f));
   auto scale = glm::scale(glm::mat4(1), glm::vec3(90, 90, 1));
   auto m = translate * rotation * scale;
   auto mp = p * m;
@@ -196,9 +214,11 @@ void Prodgagochi::renderAvatar() {
   _renderer->renderQuad(*(_frameBuffer->getTexture()), _avatarShader, mp);
 }
 
-// void Prodgagochi::renderAvatarState() {
-
-// }
+void Prodgagochi::renderAvatarState() {
+  auto productivity = _productivityState.getProductivity();
+  auto size = _productivity->getSize();
+  _productivity->setSize({productivity, size.y});
+}
 
 void Prodgagochi::createUI() {
   auto uiRenderer = _renderer->getUIRenderer();
@@ -213,6 +233,11 @@ void Prodgagochi::createUI() {
   root->addChild(background);
 
   auto ui = createUIFromFigmaFiles("assets/figma_json", {w, h});
+
+  _productivity = ui.at("Productivity");
+  _focus = ui.at("Focus");
+  _commitment = ui.at("Commitment");
+
   for (const auto &[name, element] : ui) {
     root->addChild(element);
   }
@@ -247,6 +272,24 @@ void Prodgagochi::loadSettings() {
   nlohmann::json j;
   stream >> j;
   _apps = j["apps"].template get<std::vector<AppInfo>>();
+}
+
+std::optional<AppInfo> Prodgagochi::findAppInfoByName(std::string name) {
+  auto it =
+      std::find_if(_apps.begin(), _apps.end(), [&name](const auto &appInfo) {
+        auto title = appInfo.Title;
+        // TODO Fix all this for utf
+        transform(title.begin(), title.end(), title.begin(), ::tolower);
+        transform(name.begin(), name.end(), name.begin(), ::tolower);
+        if (title.find(name) != -1 || name.find(title) != -1) {
+          return true;
+        }
+        return false;
+      });
+  if (it == _apps.end()) {
+    return std::nullopt;
+  }  
+  return *it;
 }
 
 } // namespace prodagochi

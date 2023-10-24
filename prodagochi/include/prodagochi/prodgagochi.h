@@ -1,7 +1,9 @@
 #pragma once
 
 #include <memory>
+#include <optional>
 #include <string>
+#include <string_view>
 #include <thread>
 
 #include <glfwpp/glfwpp.h>
@@ -11,9 +13,13 @@
 #include "engine/model.h"
 #include "engine/shader.h"
 #include "engine/texture.h"
+#include "engine/timer.h"
 #include "engine/ui_element.h"
 #include "app_description.h"
+#include "app_description.h"
 #include "prodagochi/app_description.h"
+#include "prodagochi/productivity_state.h"
+#include "productivity_state.h"
 
 namespace prodagochi {
 class Native;
@@ -35,6 +41,8 @@ private:
   void renderAvatarState();
   void onTabChanged(std::string tabName);
   void listenForTabSwitch();
+  void updateAvatarState();
+  std::optional<AppInfo> findAppInfoByName(std::string name);
 
 private:
   std::unique_ptr<glfw::GlfwLibrary> _glfw;
@@ -48,6 +56,14 @@ private:
   engine::Shader _avatarShader3D;
   engine::Texture _avatarTexture;
   engine::FrameBuffer *_frameBuffer;
+  std::shared_ptr<engine::UIElement> _productivity;
+  std::shared_ptr<engine::UIElement> _focus;
+  std::shared_ptr<engine::UIElement> _commitment;
+  ProductivityState _productivityState{};
+  engine::Timer _updateStateTimer;
+  
+
+
   std::shared_ptr<engine::ProgressBar> _spriteTest;
   AppSettings _settings;
   engine::Model *_model;
